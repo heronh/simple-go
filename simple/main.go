@@ -3,20 +3,26 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func server(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Fprintf(w, `<!DOCTYPE html>
-	<html>
-	<head>
-		 <title>Simple Go Web Page</title>
-	</head>
-	<body>
-		 <h1>Hello from Go!</h1>
-		 <p>This is a basic web page served by a Go server.</p>
-	</body>
-	</html>`)
+	data, err := os.ReadFile("index.html")
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return
+	}
+
+	// Set the content type header (important for the browser)
+	w.Header().Set("Content-Type", http.DetectContentType(data))
+
+	// Write the file contents to the response using fmt.Fprintf
+	_, err = fmt.Fprintf(w, "%s", data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func main() {
