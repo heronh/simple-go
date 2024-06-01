@@ -1,7 +1,7 @@
 Repositórios para referência pessoal com objetivo de auto aprendizado
 
 ## simple-package
-- Usa o projeto anterior, simple
+- Usa o projeto anterior, simple, como base
 - Separa server em um pacote diferente
 - Cria um diretório para server
   
