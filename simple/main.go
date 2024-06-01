@@ -2,34 +2,46 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"os"
+	"path/filepath"
+
+	"github.com/gin-gonic/gin"
 )
 
-func server(w http.ResponseWriter, r *http.Request) {
+func server(c *gin.Context) {
 
-	data, err := os.ReadFile("index.html")
-	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return
-	}
-
-	// Set the content type header (important for the browser)
-	w.Header().Set("Content-Type", http.DetectContentType(data))
-
-	// Write the file contents to the response using fmt.Fprintf
-	_, err = fmt.Fprintf(w, "%s", data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	fmt.Println("server")
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"title": "hello",
+	})
 }
 
 func main() {
-	// Create a handler function
-	http.HandleFunc("/", server)
 
-	// Start the server
-	fmt.Println("Server listening on port 8080...")
-	http.ListenAndServe(":8080", nil)
+	absPath, _ := filepath.Abs("templates/**/*")
+	log.Println(absPath)
+
+	// // Create a Gin router
+	router := gin.Default()
+
+	// // Load HTML templates (assuming "index.html" is in the "templates" directory)
+	router.LoadHTMLGlob("templates/*")
+
+	// // Define a route for the root path ("/")
+	router.GET("/", server)
+
+	// // Serve static files (CSS) from the 'static' directory
+	router.Static("/static", "./static")
+
+	// // Define a route for "/ping"
+	// router.GET("/ping", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{
+	// 		"message": "pong",
+	// 	})
+	// })
+
+	// // Start the server
+	router.Run(":8080")
+
 }
