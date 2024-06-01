@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-
+	"com.github/teste-package/server"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,22 +17,11 @@ func main() {
 	router.LoadHTMLGlob("templates/*")
 
 	// Define a route for the root path ("/")
-	router.GET("/", server)
+	router.GET("/", server.Server)
 
 	// Serve static files (CSS) from the 'static' directory
 	router.Static("/static", "./static")
 
 	// Start the server
 	router.Run(":8080")
-}
-
-/*
- *		Servidor que responde com a página index.html e
- * envia um parâmetro, title.
- */
-func server(c *gin.Context) {
-	fmt.Println("server")
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "hello",
-	})
 }
