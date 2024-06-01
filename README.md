@@ -1,5 +1,14 @@
 Repositórios para referência pessoal com objetivo de auto aprendizado
 
+## postgres
+- Projeto com exemplo de conexão ao postgres
+- Atualizada estrutura de diretórios:
+- - / app / main
+  -       / server
+  -       / db
+  -       / models
+  -       / migrations
+    
 ## simple-package
 - Usa o projeto anterior, simple, como base
 - Separa server em um pacote diferente
