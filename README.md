@@ -3,7 +3,7 @@ Repositórios para referência pessoal com objetivo de auto aprendizado
 ## postgres
 - Projeto com exemplo de conexão ao postgres
 - Atualizada estrutura de diretórios:
-- - / app / main
+  - / app / main
   -       / server
   -       / db
   -       / models
