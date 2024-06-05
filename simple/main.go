@@ -25,7 +25,7 @@ func main() {
 	router.Static("/static", "./static")
 
 	// Start the server
-	router.Run(":8080")
+	router.Run(":4004")
 }
 
 /*

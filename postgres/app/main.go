@@ -1,7 +1,7 @@
 package main
 
 import (
-	"com.github/teste-package/server"
+	"com.github/heronh/simple-go/postgres/app/server"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,7 +14,7 @@ func main() {
 	router := gin.Default()
 
 	// Load HTML templates
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("../templates/*")
 
 	// Define a route for the root path ("/")
 	router.GET("/", server.Server)
@@ -23,5 +23,5 @@ func main() {
 	router.Static("/static", "./static")
 
 	// Start the server
-	router.Run(":8080")
+	router.Run(":4004")
 }
