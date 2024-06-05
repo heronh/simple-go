@@ -1,4 +1,4 @@
-module com.github/heronh/simple-go/postgres/app
+module com.github/heronh/simple-go/postgres
 
 go 1.21.10
 
