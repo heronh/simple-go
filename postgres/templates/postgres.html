@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PGSQl</title>
+    <title>Lista</title>
     <link href="/static/bootstrap.min.css" rel="stylesheet">
     <script src="/static/bootstrap.bundle.js"></script>
     <link rel="icon" type="image/x-icon" href="./static/icon-book.svg"> 
@@ -17,8 +17,14 @@
          <span>Postgres</span>
 		</div>
 		<div class="card-body">
-         <span>Exemplo de uso de pacotes...
-         </span>
+         <p>Conexão com banco de dados:</p>
+
+         <p>
+            <input class="form-check-input" type="checkbox" value="" disabled>
+            <label class="form-check-label" for="flexCheckDefault">
+               &nbsp&nbsp{{.connection }}
+            </label>
+          <p>
       </div>
       <div class="card-footer">
          <div class="row">
