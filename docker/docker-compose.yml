@@ -1,0 +1,17 @@
+version: '3.8'  # Compose file version
+
+services:
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: heronhurpia@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: tyb$577*hFS
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin  # Persist data between container restarts
+    ports:
+      - 5050:80   # Map pgAdmin's port 80 to host's 5050
+
+volumes:
+  pgadmin_data:  # Named volume for pgAdmin data storage
+
