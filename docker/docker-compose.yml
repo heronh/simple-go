@@ -1,17 +1,37 @@
-version: '3.8'  # Compose file version
+version: '3.8'
 
 services:
+  postgres:
+    image: postgres:latest        # Use the latest official PostgreSQL image
+    container_name: db-postgres   # Assign a meaningful name
+    restart: unless-stopped       # Restart unless explicitly stopped
+    networks:
+      - pg-network
+    environment:
+      POSTGRES_PASSWORD: strong_password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data even if the container is removed
+
   pgadmin:
-    container_name: pgadmin4_container
     image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: unless-stopped
+    networks:
+      - pg-network
     environment:
       PGADMIN_DEFAULT_EMAIL: heronhurpia@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: tyb$577*hFS
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin  # Persist data between container restarts
+      PGADMIN_DEFAULT_PASSWORD: heron1965
     ports:
-      - 5050:80   # Map pgAdmin's port 80 to host's 5050
+      - "5050:80"  # Map container port 80 to host port 5050
 
+# Create the shared network
+networks:
+  pg-network:
+    driver: bridge  # Use the default bridge network driver
+
+# Define a volume to persist PostgreSQL data
 volumes:
-  pgadmin_data:  # Named volume for pgAdmin data storage
-
+  postgres_data:
