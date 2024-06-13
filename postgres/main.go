@@ -14,10 +14,10 @@ func main() {
 	router := gin.Default()
 
 	// Load HTML templates
-	router.LoadHTMLGlob("../templates/*")
+	router.LoadHTMLGlob("templates/*")
 
 	// Serve static files (CSS) from the 'static' directory
-	router.Static("/static", "../static")
+	router.Static("/static", "./static")
 
 	// Define a route for the root path ("/")
 	router.GET("/", server.Home)
