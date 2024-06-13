@@ -22,6 +22,7 @@ func main() {
 	// Define a route for the root path ("/")
 	router.GET("/", server.Home)
 	router.GET("/pgsql", server.Pgsql)
+	router.GET("/migrate", server.Migrate)
 
 	// Start the server
 	router.Run(":4004")
