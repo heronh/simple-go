@@ -1,5 +1,5 @@
 -- Migration 0001_create_users_table.up.sql
-CREATE TABLE users (
+CREATE TABLE public.usuarios (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	email VARCHAR(255) UNIQUE NOT NULL,
@@ -9,4 +9,5 @@ CREATE TABLE users (
 );
 
 -- Migration 0001_create_users_table.down.sql 
-DROP TABLE users;
+DROP TABLE public.usuarios;
+
