@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:latest        # Use the latest official PostgreSQL image
-    container_name: db-postgres   # Assign a meaningful name
+    container_name: db            # Assign a meaningful name
     restart: unless-stopped       # Restart unless explicitly stopped
     networks:
       - pg-network
@@ -11,7 +9,8 @@ services:
       POSTGRES_PASSWORD: strong_password
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
-
+    ports:
+      - "5430:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Persist data even if the container is removed
 
@@ -25,7 +24,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: heronhurpia@gmail.com
       PGADMIN_DEFAULT_PASSWORD: heron1965
     ports:
-      - "5050:80"  # Map container port 80 to host port 5050
+      - "5050:80"
 
 # Create the shared network
 networks:
