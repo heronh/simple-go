@@ -26,6 +26,16 @@ services:
     ports:
       - "5050:80"
 
+
+  # máquina linux
+  golang:
+    image: golang:latest
+    container_name: golang
+    networks:
+      - pg-network
+    tty: true               # Allocate a pseudo-TTY (for interactive sessions)
+    stdin_open: true        # Keep STDIN open even if not attached
+
 # Create the shared network
 networks:
   pg-network:
