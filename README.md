@@ -1,14 +1,11 @@
 Repositórios para referência pessoal com objetivo de auto aprendizado
 
-## Postgres
-- Comando para criar o servidor:
-  - docker run --name db -e POSTGRES_PASSWORD=mysecretpassword -d postgres
-- Acessar servidor postgres:
-  - docker run -it --rm --network some-network postgres psql -h some-postgres -U postgres
+## Docker
+- Pasta com os arquivos do docker, usados para hospedar o postgres
 
 ## postgres
 - Projeto com exemplo de conexão ao postgres
-- Conexão baseada em variáveis declaradas no arquivo .env
+- Conexão baseada em variáveis declaradas no arquivo
 
 ## simple-package
 - Usa o projeto anterior, simple, como base
