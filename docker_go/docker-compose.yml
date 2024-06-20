@@ -1,0 +1,56 @@
+services:
+
+  postgres:
+    image: postgres:latest        # Use the latest official PostgreSQL image
+    container_name: db            # Assign a meaningful name
+    restart: unless-stopped       # Restart unless explicitly stopped
+    networks:
+      pg_network:
+        ipv4_address: 172.19.0.21
+    environment:
+      POSTGRES_PASSWORD: strong_password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5430:5430"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: unless-stopped
+    networks:
+      pg_network:
+        ipv4_address: 172.19.0.22
+    environment:
+      PGADMIN_DEFAULT_EMAIL: heronhurpia@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: heron1965
+    ports:
+      - "5050:80"
+
+  # máquina linux
+  golang:
+    image: golang:latest
+    container_name: golang
+    networks:
+      pg_network:
+        ipv4_address: 172.19.0.23
+    tty: true               # Allocate a pseudo-TTY (for interactive sessions)
+    stdin_open: true        # Keep STDIN open even if not attached
+    volumes:
+      - ~/Documentos/simple-go/postgres:/go/src
+
+# Create the shared network
+networks:
+  pg_network:
+    driver: bridge  # Use the default bridge network driver
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.0.0/16
+
+# Define a volume to persist PostgreSQL data
+volumes:
+  postgres_data:
+
