@@ -18,7 +18,7 @@ func Migrate(c *gin.Context) {
 	fmt.Println("Migrate")
 
 	//db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/your_database?sslmode=disable")
-	db, err := sql.Open("postgres", "postgres://postgres:strong_password@172.18.0.2:5432/postgres?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:strong_password@172.23.0.2:5432/postgres?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,10 +26,10 @@ func Migrate(c *gin.Context) {
 	fmt.Println(coneccao)
 
 	err = db.Ping()
-    if err != nil {
-        log.Fatal("Error pinging database:", err)
-    }
-    fmt.Println("Successfully connected to PostgreSQL database!")	
+	if err != nil {
+		log.Fatal("Error pinging database:", err)
+	}
+	fmt.Println("Successfully connected to PostgreSQL database!")
 
 	c.HTML(http.StatusOK, "migrations.html", gin.H{
 		"coneccao": coneccao,
