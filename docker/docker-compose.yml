@@ -26,7 +26,6 @@ services:
     ports:
       - "5050:80"
 
-
   # máquina linux
   golang:
     image: golang:latest
@@ -35,6 +34,8 @@ services:
       - pg-network
     tty: true               # Allocate a pseudo-TTY (for interactive sessions)
     stdin_open: true        # Keep STDIN open even if not attached
+    volumes:
+      - ~/Documentos/simple-go/postgres:/go/src
 
 # Create the shared network
 networks:
@@ -44,3 +45,4 @@ networks:
 # Define a volume to persist PostgreSQL data
 volumes:
   postgres_data:
+
