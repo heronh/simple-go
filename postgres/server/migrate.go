@@ -18,7 +18,7 @@ func Migrate(c *gin.Context) {
 	fmt.Println("Migrate")
 
 	//db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/your_database?sslmode=disable")
-	db, err := sql.Open("postgres", "postgres://postgres:strong_password@172.23.0.2:5432/postgres?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:mysecretpassword@127.0.0.1:5432/postgres?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
