@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR"> 
 <head>
-  <title>{{ .Title }}</title>
+  {{ template "head" . }}
 </head>
 <body>
-  {{ template "header" . }}
+<div class="container m-3">
 
+  {{ template "navbar" . }}
+  
   {{ template "content" . }} 
 
   {{ template "footer" . }}
+
+</div>
+
 </body>
 </html>

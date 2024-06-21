@@ -12,9 +12,9 @@ import (
  */
 func Home(c *gin.Context) {
 
-	c.HTML(http.StatusOK, "layout.html", gin.H{
-		"Title":   "My Website",
-		"Heading": "Welcome!",
-		"Message": "This is the main content.",
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"Title":   "Templates",
+		"Heading": "Benvindo!",
+		"Message": "Página principal",
 	})
 }

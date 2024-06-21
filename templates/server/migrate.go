@@ -15,8 +15,6 @@ import (
 
 func Migrate(c *gin.Context) {
 
-	fmt.Println("Migrate")
-
 	//db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/your_database?sslmode=disable")
 	db, err := sql.Open("postgres", "postgres://postgres:mysecretpassword@127.0.0.1:5432/postgres?sslmode=disable")
 	if err != nil {
@@ -32,6 +30,8 @@ func Migrate(c *gin.Context) {
 	fmt.Println("Successfully connected to PostgreSQL database!")
 
 	c.HTML(http.StatusOK, "migrations.html", gin.H{
-		"coneccao": coneccao,
+		"Title":   "Migrações",
+		"Heading": "Teste do comunicação!",
+		"Message": "",
 	})
 }
