@@ -12,11 +12,11 @@ import (
 )
 
 const (
-	host     = "0.0.0.0"
+	host     = "localhost" //"0.0.0.0"
 	port     = 5432
 	user     = "postgres"
 	password = "mysecretpassword"
-	dbname   = "postgres"
+	dbname   = "loterias"
 )
 
 type users struct {

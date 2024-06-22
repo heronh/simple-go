@@ -1,7 +1,7 @@
 package main
 
 import (
-	"com.github/heronh/simple-go/postgres/server"
+	"com.github/templates/teste/server"
 	"github.com/gin-gonic/gin"
 )
 
