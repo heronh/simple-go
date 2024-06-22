@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR"> 
 <head>
-  {{ template "head" . }}
+	{{ template "head" . }}
 </head>
 <body>
 <div class="container m-3">
 
-  {{ template "navbar" . }}
-  
-  {{ template "welcome" . }} 
+	{{ template "navbar" . }}
+	
+	<div class="container m-4">
+		<ul class="list-group">
+			<li class="list-group-item"><h5>Mensagens</h5></li> 
+			{{ range .Mensagens }}
+			<li class="list-group-item">{{ . }}</li> 
+			{{ end }}
+		</ul>
+	</div>
 
-  {{ template "footer" . }}
+	{{ template "footer" . }}
 
 </div>
 

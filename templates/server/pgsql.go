@@ -12,11 +12,11 @@ import (
 )
 
 const (
-	host     = "192.168.30.5"
+	host     = "0.0.0.0"
 	port     = 5432
-	user     = "sat"
-	password = "U3t8QYg"
-	dbname   = "portal"
+	user     = "postgres"
+	password = "mysecretpassword"
+	dbname   = "postgres"
 )
 
 type users struct {
@@ -30,20 +30,22 @@ type users struct {
  * envia um parâmetro, title.
  */
 func Pgsql(c *gin.Context) {
-	fmt.Println("postgres")
+	// fmt.Println("postgres")
+	mensagens := []string{"Iniciando migrações..."}
 	connection := connect()
+	mensagens = append(mensagens, connection)
 
-	query := "select id, name, email from users order by id"
-	fmt.Printf("%s\n", query)
-	list := exec_query(query)
-	for _, user := range list {
-		fmt.Printf("%02d - %30s %s\n", user.id, user.name, user.email)
-	}
+	// query := "select id, name, email from users order by id"
+	// fmt.Printf("%s\n", query)
+	// list := exec_query(query)
+	// for _, user := range list {
+	// 	fmt.Printf("%02d - %30s %s\n", user.id, user.name, user.email)
+	// }
 
 	c.HTML(http.StatusOK, "postgres.html", gin.H{
-		"title":      "Postgres",
-		"connection": connection,
-		"users":      list,
+		"title":       "Postgres",
+		"psql_active": "h5",
+		"Mensagens":   mensagens,
 	})
 
 }
@@ -82,7 +84,7 @@ func exec_query(query string) []users {
 // Executa conexão com DB
 func connect() string {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	//fmt.Printf("query: %s\n", psqlInfo)
+	fmt.Printf("query: %s\n", psqlInfo)
 
 	// Abre conexão com db
 	db, err := sql.Open("postgres", psqlInfo)

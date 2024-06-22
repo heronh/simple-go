@@ -13,8 +13,9 @@ import (
 func Home(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"Title":   "Templates",
-		"Heading": "Benvindo!",
-		"Message": "Página principal",
+		"Title":       "Templates",
+		"Heading":     "Benvindo!",
+		"Message":     "Página principal",
+		"home_active": "h5",
 	})
 }
