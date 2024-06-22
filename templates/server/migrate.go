@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,7 @@ func Migrate(c *gin.Context) {
 	if err != nil {
 		mensagens = append(mensagens, "failed to connect database")
 		mensagens = append(mensagens, err.Error())
+		log.Println("")
 		return
 	}
 	mensagens = append(mensagens, "Banco de dados conectado!")
