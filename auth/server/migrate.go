@@ -51,7 +51,7 @@ func Migrate(c *gin.Context) {
 	// Initialize the driver for PostgreSQL
 	driver, _ := postgres.WithInstance(db.DB(), &postgres.Config{})
 	m, err := migrate.NewWithDatabaseInstance(
-		"file:///Users/heronhurpia/Sites/simple-go/templates/migrations",
+		"file:///Users/heronhurpia/Sites/simple-go/auth/migrations",
 		"postgres", driver)
 	if err != nil {
 		mensagens = append(mensagens, "Falha ao executar migração")

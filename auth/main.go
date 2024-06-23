@@ -22,6 +22,7 @@ func main() {
 	// Define a route for the root path ("/")
 	router.GET("/", server.Home)
 	router.GET("/migrate", server.Migrate)
+	router.GET("/todo", server.Todo)
 
 	// Start the server
 	router.Run(":4004")
