@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR"> 
 <head>
-  {{ template "head" . }}
+	{{ template "head" . }}
 </head>
 <body>
 <div class="container m-3">
 
-  {{ template "navbar" . }}
-  
-  <h1>Em desenvolvimento</h1>
+	{{ template "navbar" . }}
+	
+	<div class="container m-3">	
+		<h3>Lista de pendencias</h3>
 
-  <ul class="list-group">
-    <li class="list-group-item"><i class="bi bi-square m-2"></i>Criar migração para tarefas</li>
-    <li class="list-group-item"><i class="bi bi-check-square m-2"></i>Criar nesta página formulário de nova tarefa</li>
-    <li class="list-group-item">Ocultar atalhos não autorizados</li>
-    <li class="list-group-item">Criar lista de privilégios</li>
-    <li class="list-group-item">Verificar como criar caminhos relativos para migrações</li>
-    <li class="list-group-item">Inserir imagens do bootstrap</li>
-    <li class="list-group-item">deixar arquivos do bootstrap locais, não como links</li>
-  </ul>
-  {{ template "footer" . }}
-
+		<ul class="list-group">
+			{{range .Tarefas}}
+				<li class="list-group-item">
+					{{ if .Status}}
+						<button class="btn">
+							<i class="bi bi-square m-2"></i>
+						</button>
+					{{else}}
+						<button class="btn">
+							<i class="bi bi-check-square m-2"></i>
+						</button>
+					{{end}}
+					{{.Description}}
+				</li>
+			{{end}}
+		</ul>
+		{{ template "footer" . }}
+	</div>
 </div>
 
 </body>
