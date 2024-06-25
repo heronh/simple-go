@@ -32,6 +32,12 @@ func main() {
 		context.Redirect(http.StatusFound, "/todo")
 	})
 
+	// Edita tarefa e retorna a página de tarefas
+	router.POST("/edit-todo", func(context *gin.Context) {
+		server.EditTodo(context)
+		context.Redirect(http.StatusFound, "/todo")
+	})
+
 	// Start the server
 	router.Run(":4004")
 }

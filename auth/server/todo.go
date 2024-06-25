@@ -19,7 +19,38 @@ type Tarefa struct {
 	Updated_fmt string
 }
 
-const YYYYMMDD = "2006-01-02"
+func EditTodo(c *gin.Context) {
+
+	// Get all form values as a map
+	id := c.PostForm("id")
+	formValues := c.Request.PostForm
+
+	// Iterate and print key-value pairs
+	for key, values := range formValues {
+		fmt.Printf("Key: %s, Values: %v\n", key, values)
+		if key == "check" {
+			check(id)
+		}
+		if key == "uncheck" {
+			uncheck(id)
+		}
+		if key == "delete" {
+			delete(id)
+		}
+	}
+}
+
+func check(id string) {
+	fmt.Printf("Marcar tarefa %s\n", id)
+}
+
+func uncheck(id string) {
+	fmt.Printf("DesMarcar tarefa %s\n", id)
+}
+
+func delete(id string) {
+	fmt.Printf("Apagar tarefa %s\n", id)
+}
 
 func SaveTodo(c *gin.Context) {
 

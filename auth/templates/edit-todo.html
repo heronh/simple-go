@@ -1,19 +1,21 @@
 {{define "edit-todo"}}
 <li class="list-group-item">
-    <span>{{.Id}}</span>
-    {{ if .Status}}
-        <button class="btn">
-            <i class="bi bi-trash"></i>
-        </button>
-        <button class="btn">
-            <i class="bi bi-check-square m-2"></i>
-        </button>
-    {{else}}
-        <button class="btn">
-            <i class="bi bi-square m-2"></i>
-        </button>
-    {{end}}
-    {{.Updated_fmt}}
-    - {{.Description}}
+	<form action="/edit-todo" method="post">
+		<input value="{{.Id}}" name="id" hidden>
+		{{ if .Status}}
+			<button class="btn" type="submit" name="delete">
+				<i class="bi bi-trash"></i>
+			</button>
+			<button class="btn" type="submit" name="uncheck">
+				<i class="bi bi-check-square m-2"></i>
+			</button>
+		{{else}}
+			<button class="btn" type="submit" name="check">
+				<i class="bi bi-square m-2"></i>
+			</button>
+		{{end}}
+		{{.Updated_fmt}}
+		- {{.Description}}
+	</form>
 </li>
 {{end}}
