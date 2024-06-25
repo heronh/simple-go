@@ -1,6 +1,8 @@
 package server
 
 import (
+	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,35 +14,54 @@ type Tarefa struct {
 	Status      bool
 }
 
-// Data Structure
-type Item struct {
-	Name  string
-	Price float64
-}
-
 func Todo(c *gin.Context) {
 
-	// Sample data
-	fruits := []Item{
-		{"Apple", 0.99},
-		{"Banana", 0.55},
-		{"Orange", 1.25},
-	}
+	mensagens := []string{"Lista de pendencias"}
+	tarefas := []Tarefa{}
+	defer func() {
+		c.HTML(http.StatusOK, "todo.html", gin.H{
+			"Title":       "Loterias",
+			"Heading":     "Tarefas!",
+			"Message":     "Página de tarefas",
+			"todo_active": "h5",
+			"Tarefas":     tarefas,
+			"Mensagens":   mensagens,
+		})
+	}()
 
-	tarefas := []Tarefa{
-		{1, "Tarefa 1", true},
-		{2, "Tarefa 2", true},
-		{3, "Tarefa 3", false},
-		{4, "Tarefa 4", false},
-		{5, "Tarefa 5", true},
-	}
+	// Abre conexão com o banco de dados
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	mensagens = append(mensagens, psqlInfo)
 
-	c.HTML(http.StatusOK, "todo.html", gin.H{
-		"Title":       "Loterias",
-		"Heading":     "Tarefas!",
-		"Message":     "Página de tarefas",
-		"todo_active": "h5",
-		"Tarefas":     tarefas,
-		"Fruits":      fruits,
-	})
+	// Abre conexão com db
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		mensagens = append(mensagens, "failed to connect database")
+		mensagens = append(mensagens, err.Error())
+		return
+	}
+	defer db.Close()
+
+	// Busca lista de tarefas
+	query := "select * from todos order by status, updated_at"
+	mensagens = append(mensagens, query)
+	rows, err := db.Query(query)
+	if err != nil {
+		mensagens = append(mensagens, "Erro ao buscar lista de tarefas")
+		mensagens = append(mensagens, err.Error())
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var t Tarefa
+		err := rows.Scan(&t.Id, &t.Description, &t.Status)
+		if err != nil {
+			mensagens = append(mensagens, "Erro ao fazer o parse das tarefas")
+			mensagens = append(mensagens, err.Error())
+			return
+		}
+		tarefas = append(tarefas, t)
+	}
+	mensagens = append(mensagens, "Busca de tarefas finalizada com sucesso!")
 }

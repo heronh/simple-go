@@ -8,10 +8,10 @@
 
 	{{ template "navbar" . }}
 	
-	<div class="container m-3">	
-		<h3>Lista de pendencias</h3>
-
+	<!-- Lista de tarefa  -->
+	<div class="container m-4">	
 		<ul class="list-group">
+			<li class="list-group-item"><h5>Lista de pendencias</h5></li>
 			{{range .Tarefas}}
 				<li class="list-group-item">
 					{{ if .Status}}
@@ -27,8 +27,20 @@
 				</li>
 			{{end}}
 		</ul>
-		{{ template "footer" . }}
 	</div>
+
+	<!-- Mensagens com resultado da leitura do DB -->
+	<div class="container m-4">
+		<ul class="list-group">
+			<li class="list-group-item"><h5>Mensagens</h5></li> 
+			{{ range .Mensagens }}
+			<li class="list-group-item">{{ . }}</li> 
+			{{ end }}
+		</ul>
+	</div>
+
+	{{ template "footer" . }}
+
 </div>
 
 </body>
