@@ -20,24 +20,12 @@
 	  	</form>
 	</div>
 
-	<!-- Lista de tarefa  -->
+	<!-- Lista de tarefas  -->
 	<div class="container m-4">	
 		<ul class="list-group">
 			<li class="list-group-item"><h5>Lista de pendencias</h5></li>
 			{{range .Tarefas}}
-				<li class="list-group-item">
-					{{ if .Status}}
-						<button class="btn">
-							<i class="bi bi-check-square m-2"></i>
-						</button>
-					{{else}}
-						<button class="btn">
-							<i class="bi bi-square m-2"></i>
-						</button>
-					{{end}}
-					{{.Updated_fmt}}
-					- {{.Description}}
-				</li>
+				{{template "edit-todo" .}}
 			{{end}}
 		</ul>
 	</div>

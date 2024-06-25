@@ -1,0 +1,19 @@
+{{define "edit-todo"}}
+<li class="list-group-item">
+    <span>{{.Id}}</span>
+    {{ if .Status}}
+        <button class="btn">
+            <i class="bi bi-trash"></i>
+        </button>
+        <button class="btn">
+            <i class="bi bi-check-square m-2"></i>
+        </button>
+    {{else}}
+        <button class="btn">
+            <i class="bi bi-square m-2"></i>
+        </button>
+    {{end}}
+    {{.Updated_fmt}}
+    - {{.Description}}
+</li>
+{{end}}
