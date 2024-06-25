@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/heronh/simple-go/auth/server"
 )
@@ -23,6 +25,12 @@ func main() {
 	router.GET("/", server.Home)
 	router.GET("/migrate", server.Migrate)
 	router.GET("/todo", server.Todo)
+
+	// Salva nova tarefa e retorna a página de tarefas
+	router.POST("/save-todo", func(context *gin.Context) {
+		server.SaveTodo(context)
+		context.Redirect(http.StatusFound, "/todo")
+	})
 
 	// Start the server
 	router.Run(":4004")

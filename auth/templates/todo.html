@@ -8,6 +8,18 @@
 
 	{{ template "navbar" . }}
 	
+	<!-- Formulário de nova tarefa  -->
+	<div class="container m-4">	
+		<form class="row g-3"  action="/save-todo" method="post">
+			<div class="col-10">
+		  		<input type="text" class="form-control" id="description" name="description" placeholder="Descreva o problema">
+			</div>
+			<div class="col-2">
+		  		<button type="submit" class="btn btn-primary mb-3"><i class="bi bi-save">&nbsp;Salvar</i></button>
+			</div>
+	  	</form>
+	</div>
+
 	<!-- Lista de tarefa  -->
 	<div class="container m-4">	
 		<ul class="list-group">
@@ -16,14 +28,15 @@
 				<li class="list-group-item">
 					{{ if .Status}}
 						<button class="btn">
-							<i class="bi bi-square m-2"></i>
+							<i class="bi bi-check-square m-2"></i>
 						</button>
 					{{else}}
 						<button class="btn">
-							<i class="bi bi-check-square m-2"></i>
+							<i class="bi bi-square m-2"></i>
 						</button>
 					{{end}}
-					{{.Description}}
+					{{.Updated_fmt}}
+					- {{.Description}}
 				</li>
 			{{end}}
 		</ul>
