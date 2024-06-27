@@ -19,6 +19,12 @@ type Tarefa struct {
 	Updated_fmt string
 }
 
+const psqlQuery = "host=localhost port=5432 user=postgres password=mysecretpassword dbname=loterias sslmode=disable"
+const listTasks = "select * from todos order by status asc, updated_at desc"
+const deleteById = "delete from todos where id = "
+const setStatusById = "update todos set status = true where id = "
+const clearStatusById = "update todos set status = false where id = "
+
 func EditTodo(c *gin.Context) {
 
 	// Get all form values as a map
@@ -42,14 +48,35 @@ func EditTodo(c *gin.Context) {
 
 func check(id string) {
 	fmt.Printf("Marcar tarefa %s\n", id)
+	db, _ := sql.Open("postgres", psqlQuery)
+	defer db.Close()
+
+	// Busca lista de tarefas
+	query := fmt.Sprintf("%s %s", setStatusById, id)
+	rows, _ := db.Query(query)
+	rows.Close()
 }
 
 func uncheck(id string) {
 	fmt.Printf("DesMarcar tarefa %s\n", id)
+	db, _ := sql.Open("postgres", psqlQuery)
+	defer db.Close()
+
+	// Busca lista de tarefas
+	query := fmt.Sprintf("%s %s", clearStatusById, id)
+	rows, _ := db.Query(query)
+	rows.Close()
 }
 
 func delete(id string) {
 	fmt.Printf("Apagar tarefa %s\n", id)
+	db, _ := sql.Open("postgres", psqlQuery)
+	defer db.Close()
+
+	// Busca lista de tarefas
+	query := fmt.Sprintf("%s %s", deleteById, id)
+	rows, _ := db.Query(query)
+	rows.Close()
 }
 
 func SaveTodo(c *gin.Context) {
@@ -81,7 +108,7 @@ func SaveTodo(c *gin.Context) {
 	//fmt.Println(rows)
 }
 
-func Todo(c *gin.Context) {
+func TodoOrigina(c *gin.Context) {
 
 	mensagens := []string{"Lista de pendencias"}
 	tarefas := []Tarefa{}
@@ -136,4 +163,36 @@ func Todo(c *gin.Context) {
 		tarefas[i].Created_fmt = tarefas[i].Created_at.Format("02/01/2006 15:04")
 	}
 	mensagens = append(mensagens, "Busca de tarefas finalizada com sucesso!")
+}
+
+func Todo(c *gin.Context) {
+
+	// Abre conexão com o banco de dados
+	db, _ := sql.Open("postgres", psqlQuery)
+	defer db.Close()
+
+	// Busca lista de tarefas
+	rows, _ := db.Query(listTasks)
+	defer rows.Close()
+
+	tarefas := []Tarefa{}
+	for rows.Next() {
+		var t Tarefa
+		_ = rows.Scan(&t.Id, &t.Description, &t.Status, &t.Created_at, &t.Updated_at)
+		tarefas = append(tarefas, t)
+	}
+
+	for i := range tarefas {
+		tarefas[i].Updated_fmt = tarefas[i].Updated_at.Format("02/01/2006 15:04")
+		tarefas[i].Created_fmt = tarefas[i].Created_at.Format("02/01/2006 15:04")
+	}
+
+	c.HTML(http.StatusOK, "todo.html", gin.H{
+		"Title":       "Loterias",
+		"Heading":     "Tarefas!",
+		"Message":     "Página de tarefas",
+		"todo_active": "h5",
+		"Tarefas":     tarefas,
+		"Mensagens":   nil,
+	})
 }
