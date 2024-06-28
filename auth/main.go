@@ -7,9 +7,6 @@ import (
 	"github.com/heronh/simple-go/auth/server"
 )
 
-/*
- *		Cria um servidor que só tem um path implementado, /
- */
 func main() {
 
 	// Simulate some private data
@@ -29,7 +26,6 @@ func main() {
 		"manu":   "4321",   // user:manu password:4321
 	}))
 
-	// hit "localhost:8080/admin/secrets
 	authorized.GET("/secrets", func(c *gin.Context) {
 		// Get user, it was set by the BasicAuth middleware
 		user := c.MustGet(gin.AuthUserKey).(string)
