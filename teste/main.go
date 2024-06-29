@@ -1,105 +1,130 @@
 package main
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
+	"fmt"
 	"net/http"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte("your_secret_key")
+// App configuration (replace with your values)
+const (
+	SecretKey   = "your_very_secret_key" // Use a strong secret in production!
+	TokenExpiry = 1 * time.Minute        // Token validity duration
+	Port        = 8008
+)
 
+// User struct (replace withyour database model)
 type User struct {
+	ID       int
 	Username string
-	Password string // This should be hashed
+	Password string
 }
 
-// Dummy database of users
-var users = map[string]string{}
-
-// JWT claims struct
-type Claims struct {
-	Username string `json:"username"`
-	jwt.StandardClaims
+// Sample user data (replace with database access)
+var users = []User{
+	{1, "alice", "password"},
+	{2, "bob", "password"},
 }
 
-// HashPassword hashes given password
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
+// Define some custom types were going to use within our tokens
+type CustomerInfo struct {
+	Name string
+	Kind string
 }
 
-// CheckPasswordHash compares plain password with hash
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
+var (
+	signKey *rsa.PrivateKey
+)
+
+// CustomClaims includes jwt.StandardClaims and additional custom fields
+type CustomClaims struct {
+	jwt.RegisteredClaims
+	CustomerInfo
 }
 
-// Register new user
-func Register(c *gin.Context) {
-	var newUser User
-	if err := c.BindJSON(&newUser); err != nil {
-		return
-	}
-
-	hashedPassword, err := HashPassword(newUser.Password)
-	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-
-	users[newUser.Username] = hashedPassword
-	c.Status(http.StatusCreated)
-}
-
-// Login user
-func Login(c *gin.Context) {
-	var user User
-	if err := c.BindJSON(&user); err != nil {
-		return
-	}
-
-	hashedPassword, exists := users[user.Username]
-	if !exists || !CheckPasswordHash(user.Password, hashedPassword) {
-		c.AbortWithStatus(http.StatusUnauthorized)
-		return
-	}
-
-	expirationTime := time.Now().Add(5 * time.Minute)
-	claims := &Claims{
-		Username: user.Username,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
+func createToken(user string) (string, error) {
+	// Define the standard claims
+	claims := CustomClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpiry)),
 		},
+		CustomerInfo: CustomerInfo{Name: user, Kind: "customer"},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	// Create a new token object, specifying signing method and the claims
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+
+	// Sign the token with our private key
+	signKey, _ = rsa.GenerateKey(rand.Reader, 2048)
+	tokenString, err := token.SignedString(signKey)
 	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
+		return "", fmt.Errorf("error signing token: %w", err)
+	}
+
+	return tokenString, nil
+}
+
+func Login(ctx *gin.Context) {
+
+	// Get the username and password from the request
+	username := ctx.PostForm("username")
+	password := ctx.PostForm("password")
+
+	// Check if the user exists and the password is correct
+	var user User
+	for _, u := range users {
+		if u.Username == username && u.Password == password {
+			user = u
+			fmt.Println("User found")
+			break
+		}
+	}
+
+	// If the user was not found or the password is incorrect
+	if user.ID == 0 {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": tokenString})
-}
+	// Create a token
+	token, err := createToken(user.Username)
+	if err != nil {
+		fmt.Println("Error creating token")
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating token"})
+		return
+	}
+	fmt.Println(token)
 
-/*
- *		Servidor que responde com a página index.html e
- * envia um parâmetro, title.
- */
-func Cadastro(c *gin.Context) {
-
-	c.HTML(http.StatusOK, "cadastro.html", gin.H{
-		"Heading": "Benvindo!",
+	// Return the token
+	ctx.HTML(http.StatusOK, "produtos.html", gin.H{
+		"token": token,
 	})
 }
 
 func main() {
+
+	// Inicia gin
 	router := gin.Default()
-	router.GET("/cadastro", Cadastro)
-	router.POST("/register", Register)
+	router.LoadHTMLGlob("templates/*")
+	router.Static("/static", "./static")
+
+	// página de cadastro
+	router.GET("/produtos", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "produtos.html", gin.H{})
+	})
+	// página de cadastro
+	router.GET("/login", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "login.html", gin.H{})
+	})
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "login.html", gin.H{})
+	})
+
 	router.POST("/login", Login)
 
 	router.Run(":8008")

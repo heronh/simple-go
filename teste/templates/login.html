@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidor simples</title>
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/bootstrap.bundle.js"></script>
+
+</head>
+<body class="m-3">
+
+    <div class="card">
+        <div class="card-header text-center">
+            <h4>Login</h4>
+        </div>
+        <div class="card-body">
+            <form id="register" action="/login" method="POST">
+                <div class="m-2">
+                    <label class="form-label" for="username">User:</label>
+                    <input class="form-control" type="text" id="username" name="username" value="alice" placeholder="Nome do usuário" required>
+                </div>
+                <div class="m-2">
+                    <label class="form-label" for="password">Password:</label>
+                    <input class="form-control" type="password" id="password" name="password" value="password" placeholder="Digite sua senha" required>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="d-grid gap-2 col-2 mx-auto">
+                <button type="submit" class="btn btn-outline-primary" form="register">
+                    Salvar
+                </button>
+            </div>
+        </div>
+</html>
+
