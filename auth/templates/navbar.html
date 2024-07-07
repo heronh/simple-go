@@ -23,7 +23,10 @@
 					<a class="nav-link active" aria-current="page" href="/register">Cadastro</a>
 				</li>
 				<li class="nav-item {{ if .todo_active }} {{ .todo_active }} {{end}}">
-					<a class="nav-link active" aria-current="page" href="/todo">Tarefas</a>
+					<a class="nav-link active" aria-current="page" href="/tarefas">Tarefas</a>
+				</li>
+				<li class="nav-item {{ if .login_active }} {{ .login_active }} {{end}}">
+					<a class="nav-link active" aria-current="page" href="/login">Entrar</a>
 				</li>
 			</ul>
 		</div>

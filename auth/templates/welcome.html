@@ -1,5 +1,19 @@
-{{define "welcome"}}
-    <h2>{{ .Heading }}</h2>
-    <p>{{ .Message }}</p>
-{{end}}
+<!DOCTYPE html>
+<html lang="pt-BR"> 
+<head>
+  {{ template "head" . }}
+</head>
+<body>
+<div class="container m-3">
+
+  {{ template "navbar" . }}
   
+  <h1>Bem-vindo</h1>
+  <h2>Você está logado!</h2>
+
+  {{ template "footer" . }}
+
+</div>
+
+</body>
+</html>
