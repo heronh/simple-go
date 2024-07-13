@@ -27,6 +27,7 @@ const clearStatusById = "update todos set status = false where id = "
 
 func EditTodo(c *gin.Context) {
 
+	fmt.Println("Editando tarefa")
 	// Get all form values as a map
 	id := c.PostForm("id")
 	formValues := c.Request.PostForm

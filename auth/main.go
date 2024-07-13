@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"jwt-authentication/teste/server"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
-var claims jwt.MapClaims
+var secretKey = []byte("1234546")
 
 func main() {
 
@@ -25,48 +26,69 @@ func main() {
 	// Define a route for the root path ("/")
 	router.GET("/", server.Home)
 	router.GET("/login", server.Login)
-	router.GET("/tarefas", server.Todo)
-	router.POST("/login", func(c *gin.Context) {
-		if auth(c) {
-			server.Welcome(c)
-		} else {
-			server.Login(c)
-		}
-	})
+	router.POST("/login", login)
+
+	// Protected routes
+	protected := router.Group("/protected")
+	protected.Use(authMiddleware())
+	{
+		protected.GET("/tarefas", protectedData)
+	}
 
 	// Start the server
 	router.Run(":4004")
 }
 
-func auth(c *gin.Context) bool {
-
+func login(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")
-	fmt.Println("Email: ", email)
-	fmt.Println("Password: ", password)
+
 	if password != "123" {
-		return false
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
 	}
 
-	// Dados da carga útil (claims)
-	claims = jwt.MapClaims{
-		"email":    email,
-		"password": password,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(), // Expira em 24 horas
+	claims := jwt.MapClaims{
+		"email": email,
+		"exp":   time.Now().Add(time.Hour * 24).Unix(), // Expira em 24 horas
 	}
 
-	// Chave secreta (mantenha isso em segredo!)
-	secretKey := []byte("sua_chave_secreta")
-
-	// Cria o token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Assina o token
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
+		return
 	}
 
-	fmt.Println("Token:", tokenString)
-	return true
+	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+}
+
+func authMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tokenString := c.GetHeader("Authorization")
+		if tokenString == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Request does not contain an access token"})
+			c.Abort()
+			return
+		}
+
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+			return secretKey, nil
+		})
+
+		if err != nil || !token.Valid {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			c.Abort()
+			return
+		}
+
+		c.Next()
+	}
+}
+
+func protectedData(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"data": "This is protected data"})
 }
