@@ -68,7 +68,7 @@ func Login(c *gin.Context) {
 	result := initializers.DB.Where("email = ?", body.Email).First(&user)
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "User not found",
+			"error": "Usuário não encontrado",
 		})
 		return
 	}
@@ -87,7 +87,7 @@ func Login(c *gin.Context) {
 		"sub": user.ID,
 		"exp": time.Now().Add(time.Hour * 24).Unix(),
 	})
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to generate token",
@@ -96,9 +96,10 @@ func Login(c *gin.Context) {
 	}
 
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600*24, "/", "", false, true)
+	c.SetCookie("Authorization", tokenString, 3600*24, "", "", false, true)
 
 	// Respond with the user
+	c.Next()
 	c.JSON(http.StatusOK, gin.H{
 		"token": tokenString,
 	})
@@ -107,35 +108,5 @@ func Login(c *gin.Context) {
 func Validate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Logado!",
-	})
-}
-func ValidateOk(c *gin.Context) {
-	// Validate the token
-	tokenString, err := c.Cookie("Authorization")
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Unauthorized",
-		})
-		c.Abort()
-		return
-	}
-
-	// Parse the token
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("SECRET")), nil
-	})
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Unauthorized",
-		})
-		c.Abort()
-		return
-	}
-
-	// Respond with the user
-	claims := token.Claims.(jwt.MapClaims)
-	c.JSON(http.StatusOK, gin.H{
-		"sub":     claims["sub"],
-		"message": "Authorized",
 	})
 }
